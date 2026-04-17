@@ -3,7 +3,7 @@ import LoginLeftSide from "./LoginLeftSide";
 import { ArrowLeftIcon, EyeIcon, EyeOffIcon, Loader2Icon } from "lucide-react";
 import { useState } from "react";
 
-type Role = "admin" | "employee";
+export type Role = "admin" | "employee";
 interface LoginFormType {
   role: Role;
   title: string;

@@ -1,4 +1,143 @@
-export const DEPARTMENTS = [
+export type Department =
+  | "Engineering"
+  | "Human Resources"
+  | "Marketing"
+  | "Sales"
+  | "Finance"
+  | "Operations"
+  | "IT Support"
+  | "Customer Success"
+  | "Product Management"
+  | "Design";
+
+export type UserRole = "ADMIN" | "EMPLOYEE";
+
+export type EmploymentStatus = "ACTIVE";
+
+export type LeaveType = "ANNUAL" | "CASUAL" | "SICK";
+
+export type LeaveStatus = "APPROVED" | "REJECTED" | "PENDING";
+
+export type AttendanceStatus = "PRESENT";
+
+export type DayType =
+  | "Full Day"
+  | "Three Quarter Day"
+  | "Half Day"
+  | "Short Day";
+
+export type AdminDashboardData = {
+  role: "ADMIN";
+  totalEmployees: number;
+  totalDepartments: number;
+  todayAttendance: number;
+  pendingLeaves: number;
+};
+
+export type EmployeeDashboardData = {
+  currentMonthAttendance: number;
+  pendingLeaves: number;
+  latestPayslip: {
+    netSalary: number;
+  };
+  employee: {
+    firstName: string;
+    lastName: string;
+    position: string;
+    department: Department;
+  };
+};
+
+export type ProfileData = {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  image: string | null;
+};
+
+export type EmployeeUser = {
+  _id: string;
+  email: string;
+  role: UserRole;
+};
+
+export type Employee = {
+  _id: string;
+  userId: EmployeeUser;
+  department: Department;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  position: string;
+  basicSalary: number;
+  allowances: number;
+  deductions: number;
+  employmentStatus: EmploymentStatus;
+  joinDate: string;
+  image: string | null;
+  isDeleted: boolean;
+  bio: string;
+  createdAt: string;
+  updatedAt: string;
+  id: string;
+  user: {
+    email: string;
+    role: UserRole;
+  };
+};
+
+export type Leave = {
+  _id: string;
+  employeeId: string;
+  type: LeaveType;
+  startDate: string;
+  endDate: string;
+  reason: string;
+  status: LeaveStatus;
+  createdAt: string;
+  updatedAt: string;
+  id: string;
+  employee: Employee | Employee[];
+};
+
+export type Payslip = {
+  _id: string;
+  employeeId: string;
+  month: number;
+  year: number;
+  basicSalary: number;
+  allowances: number;
+  deductions: number;
+  netSalary: number;
+  createdAt: string;
+  updatedAt: string;
+  id: string;
+  employee: Employee;
+};
+
+export type Attendance = {
+  _id: string;
+  employeeId: string;
+  date: string;
+  checkIn: string | null;
+  checkOut: string | null;
+  status: AttendanceStatus;
+  workingHours: number | null;
+  dayType: DayType | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type WorkingHoursRecord = Attendance;
+
+export type DayTypeDisplay = {
+  label: string;
+  className: string;
+};
+
+export const DEPARTMENTS: Department[] = [
   "Engineering",
   "Human Resources",
   "Marketing",
@@ -11,7 +150,7 @@ export const DEPARTMENTS = [
   "Design",
 ];
 
-export const dummyAdminDashboardData = {
+export const dummyAdminDashboardData: AdminDashboardData = {
   role: "ADMIN",
   totalEmployees: 3,
   totalDepartments: 10,
@@ -19,7 +158,7 @@ export const dummyAdminDashboardData = {
   pendingLeaves: 1,
 };
 
-export const dummyEmployeeDashboardData = {
+export const dummyEmployeeDashboardData: EmployeeDashboardData = {
   currentMonthAttendance: 20,
   pendingLeaves: 2,
   latestPayslip: {
@@ -33,7 +172,7 @@ export const dummyEmployeeDashboardData = {
   },
 };
 
-export const dummyProfileData = {
+export const dummyProfileData: ProfileData = {
   _id: "69b411e6f8a807df391d7b13",
   firstName: "John",
   lastName: "Doe",
@@ -41,7 +180,7 @@ export const dummyProfileData = {
   image: null,
 };
 
-export const dummyEmployeeData = [
+export const dummyEmployeeData: Employee[] = [
   {
     _id: "69b414a7f8a807df391d7b58",
     userId: {
@@ -131,7 +270,7 @@ export const dummyEmployeeData = [
   },
 ];
 
-export const dummyLeaveData = [
+export const dummyLeaveData: Leave[] = [
   {
     _id: "69b4165af8a807df391d7bfd",
     employeeId: "69b41439f8a807df391d7b52",
@@ -186,7 +325,7 @@ export const dummyLeaveData = [
   },
 ];
 
-export const dummyPayslipData = [
+export const dummyPayslipData: Payslip[] = [
   {
     _id: "69b41595f8a807df391d7baa",
     employeeId: "69b411e6f8a807df391d7b13",
@@ -273,23 +412,7 @@ export const dummyPayslipData = [
   },
 ];
 
-type AttendanceStatus = "PRESENT" | "ABSENT" | "LEAVE" | "HALF_DAY";
-type DayType = "Full Day" | "Half Day" | "Three Quarter Day" | "Short Day";
-
-interface AttendanceRecord {
-  _id: string;
-  employeeId: string;
-  date: string;
-  checkIn: string;
-  checkOut: string;
-  status: AttendanceStatus;
-  workingHours: number;
-  dayType: DayType;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export const dummyAttendanceData: AttendanceRecord[] = [
+export const dummyAttendanceData: Attendance[] = [
   {
     _id: "69b68d19f4437fdd254d5a68",
     employeeId: "69b411e6f8a807df391d7b13",
@@ -315,39 +438,3 @@ export const dummyAttendanceData: AttendanceRecord[] = [
     updatedAt: "2026-03-13T13:48:42.433Z",
   },
 ];
-
-export function getWorkingHoursDisplay(record: AttendanceRecord) {
-  if (record.workingHours != null) {
-    const hrs = Math.floor(record.workingHours);
-    const mins = Math.round((record.workingHours - hrs) * 60);
-    return `${hrs}h ${mins}m`;
-  }
-  // If still checked in (no checkout), compute live hours
-  if (record.checkIn && !record.checkOut) {
-    const diffMs = Date.now() - new Date(record.checkIn).getTime();
-    const diffHours = diffMs / (1000 * 60 * 60);
-    const hrs = Math.floor(diffHours);
-    const mins = Math.round((diffHours - hrs) * 60);
-    return `${hrs}h ${mins}m (ongoing)`;
-  }
-  return "—";
-}
-
-export function getDayTypeDisplay(record: AttendanceRecord) {
-  if (record.dayType) {
-    const map = {
-      "Full Day": "badge-success",
-      "Three Quarter Day": "bg-blue-100 text-blue-700",
-      "Half Day": "badge-warning",
-      "Short Day": "badge-danger",
-    };
-    return {
-      label: record.dayType,
-      className: map[record.dayType] || "bg-slate-100 text-slate-600",
-    };
-  }
-  if (record.checkIn && !record.checkOut) {
-    return { label: "In Progress", className: "bg-indigo-100 text-indigo-700" };
-  }
-  return { label: "—", className: "" };
-}

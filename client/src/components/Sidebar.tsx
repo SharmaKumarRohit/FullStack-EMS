@@ -29,7 +29,7 @@ function Sidebar() {
     setMobileOpen(false);
   }, [pathname]);
 
-  const role: string = "admin";
+  const role: string = "employee";
   const navItems = [
     { name: "Dashboard", href: "/dashboard", icon: LayoutGridIcon },
     role === "admin"

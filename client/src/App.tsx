@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import {
-  Attendance,
+  AttendancePage,
   Dashboard,
   Employees,
   Layout,
@@ -46,7 +46,7 @@ const router = createBrowserRouter(
       <Route element={<Layout />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/employees" element={<Employees />} />
-        <Route path="/attendance" element={<Attendance />} />
+        <Route path="/attendance" element={<AttendancePage />} />
         <Route path="/leave" element={<Leave />} />
         <Route path="/payslips" element={<Payslips />} />
         <Route path="/settings" element={<Settings />} />

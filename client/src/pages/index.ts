@@ -1,4 +1,4 @@
-import Attendance from "./Attendance";
+import AttendancePage from "./AttendancePage";
 import Dashboard from "./Dashboard";
 import Employees from "./Employees";
 import Layout from "./Layout";
@@ -9,7 +9,7 @@ import PrintPayslip from "./PrintPayslip";
 import Settings from "./Settings";
 
 export {
-  Attendance,
+  AttendancePage,
   Dashboard,
   Employees,
   Layout,

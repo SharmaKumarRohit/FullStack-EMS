@@ -31,7 +31,7 @@ function Employees() {
 
   useEffect(() => {
     fetchEmployees();
-  }, [selectedDept]);
+  }, [fetchEmployees]);
 
   const filtered = employees.filter((emp) =>
     `${emp.firstName} ${emp.lastName} ${emp.position}`

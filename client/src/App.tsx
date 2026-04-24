@@ -11,7 +11,7 @@ import {
   Dashboard,
   Employees,
   Layout,
-  Leave,
+  LeavePage,
   LoginLanding,
   Payslips,
   PrintPayslip,
@@ -47,7 +47,7 @@ const router = createBrowserRouter(
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/employees" element={<Employees />} />
         <Route path="/attendance" element={<AttendancePage />} />
-        <Route path="/leave" element={<Leave />} />
+        <Route path="/leave" element={<LeavePage />} />
         <Route path="/payslips" element={<Payslips />} />
         <Route path="/settings" element={<Settings />} />
       </Route>

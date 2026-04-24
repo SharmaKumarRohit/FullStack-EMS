@@ -2,7 +2,7 @@ import AttendancePage from "./AttendancePage";
 import Dashboard from "./Dashboard";
 import Employees from "./Employees";
 import Layout from "./Layout";
-import Leave from "./Leave";
+import LeavePage from "./LeavePage";
 import LoginLanding from "./LoginLanding";
 import Payslips from "./Payslips";
 import PrintPayslip from "./PrintPayslip";
@@ -13,7 +13,7 @@ export {
   Dashboard,
   Employees,
   Layout,
-  Leave,
+  LeavePage,
   LoginLanding,
   Payslips,
   PrintPayslip,

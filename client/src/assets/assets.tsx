@@ -53,6 +53,9 @@ export type ProfileData = {
   firstName: string;
   lastName: string;
   email: string;
+  position: string;
+  isDeleted: boolean;
+  bio: string;
   image: string | null;
 };
 
@@ -177,6 +180,9 @@ export const dummyProfileData: ProfileData = {
   firstName: "John",
   lastName: "Doe",
   email: "johndoe@example.com",
+  position: "Software Enginner",
+  isDeleted: false,
+  bio: "",
   image: null,
 };
 

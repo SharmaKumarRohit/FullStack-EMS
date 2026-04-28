@@ -76,7 +76,7 @@ function ProfileForm({ initialData, onSuccess }: PropsType) {
               Position
             </label>
             <input
-              type="email"
+              type="text"
               id="position"
               name="position"
               disabled

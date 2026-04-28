@@ -180,7 +180,7 @@ export const dummyProfileData: ProfileData = {
   firstName: "John",
   lastName: "Doe",
   email: "johndoe@example.com",
-  position: "Software Enginner",
+  position: "Software Engineer",
   isDeleted: false,
   bio: "",
   image: null,

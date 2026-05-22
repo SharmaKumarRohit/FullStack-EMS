@@ -25,7 +25,7 @@ export const getDashboard = async (req, res) => {
       return res.json({
         role: "ADMIN",
         totalEmployees,
-        totalDeparments: DEPARTMENTS.length,
+        totalDepartments: DEPARTMENTS.length,
         todayAttendance,
         pendingLeaves,
       });
@@ -38,7 +38,7 @@ export const getDashboard = async (req, res) => {
 
       const today = new Date();
       const [currentMonthAttendance, pendingLeaves, latestPayslip] =
-        Promise.all([
+        await Promise.all([
           Attendance.countDocuments({
             employeeId: employee._id,
             date: {

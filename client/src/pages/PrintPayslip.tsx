@@ -10,7 +10,6 @@ import toast from "react-hot-toast";
 function PrintPayslip() {
   const { id } = useParams();
   const [payslip, setPayslip] = useState<Payslip | null>(null);
-  console.log(payslip);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

@@ -22,8 +22,8 @@ function EmployeeForm({ initialData, onSuccess, onCancel }: PropsType) {
     setLoading(true);
     const formData = new FormData(e.currentTarget);
     if (isEditMode) {
-      const pwd = formData.get("password");
-      if (!pwd) formData.delete("password");
+      const pwd = formData.get("change-password");
+      if (!pwd) formData.delete("change-password");
     }
     try {
       const url = isEditMode ? `/employees/${initialData.id}` : "/employees";

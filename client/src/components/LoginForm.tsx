@@ -3,12 +3,12 @@ import LoginLeftSide from "./LoginLeftSide";
 import { ArrowLeftIcon, EyeIcon, EyeOffIcon, Loader2Icon } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "../context/AuthProvider";
-import type { UserRole } from "../assets/assets";
+import type { Role } from "../assets/assets";
 import toast from "react-hot-toast";
 import axios from "axios";
 
 interface LoginFormType {
-  role: UserRole;
+  role: Role;
   title: string;
   subTitle: string;
 }
@@ -25,9 +25,9 @@ function LoginForm({ role, title, subTitle }: LoginFormType) {
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
-    setLoading(false);
+    setLoading(true);
     try {
-      await login({ email, password, userRole: role });
+      await login({ email, password, role });
       navigate("/dashboard");
     } catch (error) {
       if (axios.isAxiosError(error)) {

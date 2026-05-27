@@ -15,6 +15,8 @@ import {
 } from "lucide-react";
 import { useAuth } from "../context/AuthProvider";
 import api from "../api/axios";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 function Sidebar() {
   const { pathname } = useLocation();
@@ -23,10 +25,23 @@ function Sidebar() {
   const { user, loading, logout } = useAuth();
 
   useEffect(() => {
-    api.get("/profile").then(({ data }) => {
-      if (data.firstName)
-        setUsername(`${data.firstName} ${data.lastName || ""}`.trim());
-    });
+    api
+      .get("/profile")
+      .then(({ data }) => {
+        if (data.firstName)
+          setUsername(`${data.firstName} ${data.lastName || ""}`.trim());
+      })
+      .catch((error) => {
+        if (axios.isAxiosError(error)) {
+          const message =
+            error.response?.data?.error ||
+            error.message ||
+            "Failed to load profile";
+          toast.error(message);
+        } else {
+          toast.error("Something Went Wrong");
+        }
+      });
   }, []);
 
   // Close mobile sidebar on route change

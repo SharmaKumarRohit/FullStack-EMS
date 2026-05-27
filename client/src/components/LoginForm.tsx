@@ -1,11 +1,14 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import LoginLeftSide from "./LoginLeftSide";
 import { ArrowLeftIcon, EyeIcon, EyeOffIcon, Loader2Icon } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "../context/AuthProvider";
+import type { UserRole } from "../assets/assets";
+import toast from "react-hot-toast";
+import axios from "axios";
 
-export type Role = "admin" | "employee";
 interface LoginFormType {
-  role: Role;
+  role: UserRole;
   title: string;
   subTitle: string;
 }
@@ -16,8 +19,27 @@ function LoginForm({ role, title, subTitle }: LoginFormType) {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError("");
+    setLoading(false);
+    try {
+      await login({ email, password, userRole: role });
+      navigate("/dashboard");
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const message =
+          error.response?.data?.error || error.message || "Login failed";
+        toast.error(message);
+      } else {
+        toast.error("Something Went Wrong");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <div className="min-h-screen flex flex-col md:flex-row">

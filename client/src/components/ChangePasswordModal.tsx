@@ -1,6 +1,9 @@
 import { useState } from "react";
 import Modal from "./Modal";
 import { Loader2Icon, LockIcon, X } from "lucide-react";
+import api from "../api/axios";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 type PropsType = {
   open: boolean;
@@ -14,13 +17,42 @@ function ChangePasswordModal({ open, onClose }: PropsType) {
     text: "",
   });
 
-  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
+    setMessage({ type: "", text: "" });
+    const formData = new FormData(e.currentTarget);
+    const currentPassword = formData.get("currentPassword");
+    const newPassword = formData.get("newPassword");
+    try {
+      const { data } = await api.post("/auth/change-password", {
+        currentPassword,
+        newPassword,
+      });
+      if (!data.success)
+        throw new Error(data.error || "Failed to update password");
+      setMessage({ type: "success", text: "Password updated successfully" });
+      e.target.reset();
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        setMessage({
+          type: "error",
+          text:
+            error?.response?.data?.error ||
+            error.message ||
+            "Failed to update password",
+        });
+      } else {
+        toast.error("Something Went Wrong");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (!open) return null;
   return (
-    <Modal closeModal={onClose}>
+    <Modal closeModal={onClose} maxWidth="max-w-md" alignment="items-center">
       <div className="flex items-center justify-between p-6 pb-0">
         <h2 className="text-lg font-medium text-slate-900 flex items-center gap-2">
           <LockIcon className="size-5 text-slate-400" /> Change Password

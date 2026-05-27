@@ -1,21 +1,34 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { dummyPayslipData, type Payslip } from "../assets/assets";
+import { type Payslip } from "../assets/assets";
 import Loading from "../components/Loading";
 import { format } from "date-fns";
+import api from "../api/axios";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 function PrintPayslip() {
   const { id } = useParams();
   const [payslip, setPayslip] = useState<Payslip | null>(null);
+  console.log(payslip);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const payslipFound = dummyPayslipData.find((slip) => slip._id === id);
-    setPayslip(payslipFound ?? null);
-    const timeOutId = setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-    return () => clearTimeout(timeOutId);
+    api
+      .get(`/payslips/${id}`)
+      .then((res) => setPayslip(res.data))
+      .catch((error) => {
+        if (axios.isAxiosError(error)) {
+          const message =
+            error.response?.data?.error ||
+            error.message ||
+            "Failed to download payslip";
+          toast.error(message);
+        } else {
+          toast.error("Something Went Wrong");
+        }
+      })
+      .finally(() => setLoading(false));
   }, [id]);
 
   if (loading) return <Loading />;

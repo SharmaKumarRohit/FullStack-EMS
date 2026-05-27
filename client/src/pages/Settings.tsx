@@ -1,25 +1,43 @@
 import { useEffect, useState } from "react";
-import { dummyProfileData, type ProfileData } from "../assets/assets";
+import { type ProfileData } from "../assets/assets";
 import Loading from "../components/Loading";
 import { Lock } from "lucide-react";
 import ProfileForm from "../components/ProfileForm";
 import ChangePasswordModal from "../components/ChangePasswordModal";
+import { useAuth } from "../context/AuthProvider";
+import api from "../api/axios";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 function Settings() {
+  const { user } = useAuth();
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
 
   const fetchProfile = async () => {
-    setProfile(dummyProfileData);
-    setTimeout(() => {
+    try {
+      const res = await api.get("/profile");
+      const profile = res.data;
+      if (profile) setProfile(profile);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const message =
+          error?.response?.data?.error ||
+          error.message ||
+          "Failed to load profile data";
+        toast.error(message);
+      } else {
+        toast.error("Something Went Wrong");
+      }
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   useEffect(() => {
     fetchProfile();
-  }, []);
+  }, [user]);
 
   if (loading) return <Loading />;
 

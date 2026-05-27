@@ -1,6 +1,9 @@
 import { useState } from "react";
 import Modal from "../Modal";
 import { CalendarDays, FileText, Loader2, Send, X } from "lucide-react";
+import api from "../../api/axios";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 type PropsType = {
   open: boolean;
@@ -18,11 +21,31 @@ function LeaveModal({ open, onClose, onSuccess }: PropsType) {
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData.entries());
+    try {
+      await api.post("/leave", data);
+      onSuccess();
+      onClose();
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const message =
+          error.response?.data?.error ||
+          error.message ||
+          "Failed to apply leave";
+        toast.error(message);
+      } else {
+        toast.error("Something Went Wrong");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (!open) return null;
   return (
-    <Modal closeModal={onClose}>
+    <Modal closeModal={onClose} maxWidth="max-w-lg" alignment="items-center">
       {/* Header */}
       <div className="flex items-center justify-between p-6 pb-0">
         <div>
@@ -45,13 +68,13 @@ function LeaveModal({ open, onClose, onSuccess }: PropsType) {
         {/* leave type */}
         <div>
           <label
-            htmlFor="leaveType"
+            htmlFor="type"
             className="flex items-center gap-2 text-sm font-medium text-slate-700 mb-2"
           >
             <FileText className="size-4 text-slate-400" />
             Leave Type
           </label>
-          <select name="leaveType" id="leaveType" required>
+          <select name="type" id="type" required>
             <option value="SICK">Sick Leave</option>
             <option value="CASUAL">Casual Leave</option>
             <option value="ANNUAL">Annual Leave</option>

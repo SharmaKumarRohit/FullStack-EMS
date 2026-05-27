@@ -10,7 +10,7 @@ export type Department =
   | "Product Management"
   | "Design";
 
-export type UserRole = "ADMIN" | "EMPLOYEE";
+export type Role = "ADMIN" | "EMPLOYEE";
 
 export type EmploymentStatus = "ACTIVE";
 
@@ -26,6 +26,12 @@ export type DayType =
   | "Half Day"
   | "Short Day";
 
+export type User = {
+  email: string;
+  password: string;
+  role: Role;
+};
+
 export type AdminDashboardData = {
   role: "ADMIN";
   totalEmployees: number;
@@ -40,6 +46,7 @@ export type EmployeeDashboardData = {
   latestPayslip: {
     netSalary: number;
   };
+  role: "EMPLOYEE";
   employee: {
     firstName: string;
     lastName: string;
@@ -62,7 +69,7 @@ export type ProfileData = {
 export type EmployeeUser = {
   _id: string;
   email: string;
-  role: UserRole;
+  role: Role;
 };
 
 export type Employee = {
@@ -87,7 +94,7 @@ export type Employee = {
   id: string;
   user: {
     email: string;
-    role: UserRole;
+    role: Role;
   };
 };
 
@@ -167,6 +174,7 @@ export const dummyEmployeeDashboardData: EmployeeDashboardData = {
   latestPayslip: {
     netSalary: 2000,
   },
+  role: "EMPLOYEE",
   employee: {
     firstName: "John",
     lastName: "Doe",

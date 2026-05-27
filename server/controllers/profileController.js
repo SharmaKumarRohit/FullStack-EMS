@@ -14,8 +14,8 @@ export const getProfile = async (req, res) => {
         lastName: "",
         email: session.email,
       });
-      return res.json(employee);
     }
+    return res.json(employee);
   } catch (error) {
     return res.status(500).json({ error: "Failed to fetch profile" });
   }

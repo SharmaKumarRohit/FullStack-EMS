@@ -10,11 +10,10 @@ export const getEmployees = async (req, res) => {
     const where = {};
     if (department) where.department = department;
 
-    const employees = (await Employee.find(where))
-      .sort({ created: -1 })
+    const employees = await Employee.find(where)
+      .sort({ createdAt: -1 })
       .populate("userId", "email role") // Replace userId with user details (email or role)
       .lean();
-    console.log(employees);
 
     const result = employees.map((emp) => ({
       ...emp,
@@ -107,7 +106,6 @@ export const updateEmployee = async (req, res) => {
     } = req.body;
 
     const employee = await Employee.findById(id);
-    console.log(employee);
     if (!employee) return res.status(404).json({ error: "Employee not found" });
 
     await Employee.findByIdAndUpdate(id, {

@@ -24,6 +24,7 @@ export const createPayslip = async (req, res) => {
     });
     return res.json({ success: true, data: payslip });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ error: "Failed to create payslip" });
   }
 };

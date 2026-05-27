@@ -1,6 +1,9 @@
 import { useState } from "react";
 import type { Attendance } from "../../assets/assets";
 import { Loader2Icon, LogInIcon, LogOutIcon } from "lucide-react";
+import api from "../../api/axios";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 type PropsType = {
   todayRecord?: Attendance;
@@ -10,12 +13,24 @@ type PropsType = {
 function CheckInButton({ todayRecord, onAction }: PropsType) {
   const [loading, setLoading] = useState(false);
 
-  const handleAttendance = () => {
+  const handleAttendance = async () => {
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      await api.post("/attendance");
       onAction();
-    }, 1000);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const message =
+          error.response?.data?.error ||
+          error.message ||
+          "Failed to clockIn or clockOut";
+        toast.error(message);
+      } else {
+        toast.error("Something Went Wrong");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (todayRecord?.checkOut) {

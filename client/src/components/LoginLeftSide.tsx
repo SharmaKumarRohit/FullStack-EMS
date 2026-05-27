@@ -1,5 +1,3 @@
-import React from "react";
-
 function LoginLeftSide() {
   return (
     <div className="hidden md:flex w-1/2 bg-indigo-950 relative overflow-hidden border-r border-slate-200">

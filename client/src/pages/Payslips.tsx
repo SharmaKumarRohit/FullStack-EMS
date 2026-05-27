@@ -1,9 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import {
-  dummyEmployeeData,
-  type Payslip,
-  type Employee,
-} from "../assets/assets";
+import { type Payslip, type Employee } from "../assets/assets";
 import Loading from "../components/Loading";
 import PayslipList from "../components/payslip/PayslipList";
 import GeneratePayslipForm from "../components/payslip/GeneratePayslipForm";

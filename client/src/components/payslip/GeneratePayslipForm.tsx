@@ -2,6 +2,9 @@ import { Loader2, Plus, X } from "lucide-react";
 import { useState } from "react";
 import type { Employee } from "../../assets/assets";
 import Modal from "../Modal";
+import api from "../../api/axios";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 type PropsType = {
   employees: Employee[];
@@ -22,13 +25,33 @@ function GeneratePayslipForm({ employees, onSuccess }: PropsType) {
       </button>
     );
 
-  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData.entries());
+    try {
+      await api.post("/payslips", data);
+      setIsOpen(false);
+      onSuccess();
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const message =
+          error.response?.data?.error ||
+          error.message ||
+          "Failed to generate payslip";
+        toast.error(message);
+      } else {
+        toast.error("Something Went Wrong");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const closeModal = () => setIsOpen(false);
   return (
-    <Modal closeModal={closeModal}>
+    <Modal closeModal={closeModal} maxWidth="max-w-lg" alignment="items-center">
       <div className="p-6">
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-lg font-bold text-slate-900">
@@ -169,8 +192,3 @@ function GeneratePayslipForm({ employees, onSuccess }: PropsType) {
 }
 
 export default GeneratePayslipForm;
-// <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-// <div className="card max-w-lg w-full p-6 animate-slide-up">
-
-// </div>
-// </div>

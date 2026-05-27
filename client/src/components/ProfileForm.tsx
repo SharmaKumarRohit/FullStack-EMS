@@ -1,6 +1,9 @@
 import { useState } from "react";
 import type { ProfileData } from "../assets/assets";
 import { Loader2, Save, User } from "lucide-react";
+import api from "../api/axios";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 type PropsType = {
   initialData: ProfileData;
@@ -11,8 +14,29 @@ function ProfileForm({ initialData, onSuccess }: PropsType) {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
-  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
+    setMessage("");
+    const formData = new FormData(e.currentTarget);
+    try {
+      await api.post("/profile", formData);
+      setMessage("Profile updated successfully");
+      onSuccess?.();
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const message =
+          error.response?.data?.error ||
+          error.message ||
+          "Failed to update profile data";
+        toast.error(message);
+      } else {
+        toast.error("Something Went Wrong");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <form onSubmit={handleSubmit} className="card p-5 sm:p-6 mb-6">

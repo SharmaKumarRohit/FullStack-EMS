@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import {
-  dummyPayslipData,
   dummyEmployeeData,
   type Payslip,
   type Employee,
@@ -8,18 +7,36 @@ import {
 import Loading from "../components/Loading";
 import PayslipList from "../components/payslip/PayslipList";
 import GeneratePayslipForm from "../components/payslip/GeneratePayslipForm";
+import { useAuth } from "../context/AuthProvider";
+import api from "../api/axios";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 function Payslips() {
   const [payslips, setPayslips] = useState<Payslip[]>([]);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(true);
-  const isAdmin = true;
+
+  const { user } = useAuth();
+  const isAdmin = user?.role === "ADMIN";
 
   const fetchPayslips = useCallback(async () => {
-    setPayslips(dummyPayslipData);
-    setTimeout(() => {
+    try {
+      const res = await api.get("/payslips");
+      setPayslips(res.data.data || []);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const message =
+          error.response?.data?.error ||
+          error.message ||
+          "Failed to fetch payslips data";
+        toast.error(message);
+      } else {
+        toast.error("Something Went Wrong");
+      }
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   }, []);
 
   useEffect(() => {
@@ -27,7 +44,23 @@ function Payslips() {
   }, [fetchPayslips]);
 
   useEffect(() => {
-    if (isAdmin) setEmployees(dummyEmployeeData);
+    if (isAdmin)
+      api
+        .get("/employees")
+        .then((res) =>
+          setEmployees(res.data.filter((e: Employee) => !e.isDeleted)),
+        )
+        .catch((error) => {
+          if (axios.isAxiosError(error)) {
+            const message =
+              error.response?.data?.error ||
+              error.message ||
+              "Failed to load employee data";
+            toast.error(message);
+          } else {
+            toast.error("Something Went Wrong");
+          }
+        });
   }, [isAdmin]);
 
   if (loading) return <Loading />;

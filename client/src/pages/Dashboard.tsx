@@ -1,29 +1,37 @@
 import { useEffect, useState } from "react";
 import {
-  dummyEmployeeDashboardData,
-  dummyAdminDashboardData,
   type EmployeeDashboardData,
   type AdminDashboardData,
 } from "../assets/assets";
 import Loading from "../components/Loading";
 import EmployeeDashboard from "../components/EmployeeDashboard";
 import AdminDashboard from "../components/AdminDashboard";
+import api from "../api/axios";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 type DashboardData = AdminDashboardData | EmployeeDashboardData;
-function isAdmin(data: DashboardData): data is AdminDashboardData {
-  return "role" in data;
-}
 
 function Dashboard() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setData(dummyAdminDashboardData);
-    const timeOutId = setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-    return () => clearTimeout(timeOutId);
+    api
+      .get("/dashboard")
+      .then((res) => setData(res.data))
+      .catch((error) => {
+        if (axios.isAxiosError(error)) {
+          const message =
+            error.response?.data?.error ||
+            error.message ||
+            "Failed to load dashboard data";
+          toast.error(message);
+        } else {
+          toast.error("Something Went Wrong");
+        }
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   if (loading) return <Loading />;
@@ -33,7 +41,7 @@ function Dashboard() {
         Failed to load dashboard
       </p>
     );
-  if (isAdmin(data)) {
+  if (data.role === "ADMIN") {
     return <AdminDashboard data={data} />;
   } else {
     return <EmployeeDashboard data={data} />;

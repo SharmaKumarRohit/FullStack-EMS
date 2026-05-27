@@ -2,6 +2,9 @@ import { useNavigate } from "react-router-dom";
 import { type Employee, DEPARTMENTS } from "../assets/assets";
 import { useState } from "react";
 import { Loader2Icon } from "lucide-react";
+import api from "../api/axios";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 type PropsType = {
   initialData?: Employee;
@@ -13,8 +16,33 @@ function EmployeeForm({ initialData, onSuccess, onCancel }: PropsType) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const isEditMode = !!initialData;
-  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
+    const formData = new FormData(e.currentTarget);
+    if (isEditMode) {
+      const pwd = formData.get("password");
+      if (!pwd) formData.delete("password");
+    }
+    try {
+      const url = isEditMode ? `/employees/${initialData.id}` : "/employees";
+      const method = isEditMode ? "put" : "post";
+      await api[method](url, formData);
+      onSuccess ? onSuccess() : navigate("/employees");
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const message =
+          error.response?.data?.error ||
+          error.message ||
+          "Failed to create employees";
+        toast.error(message);
+      } else {
+        toast.error("Something Went Wrong");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <form
@@ -52,13 +80,13 @@ function EmployeeForm({ initialData, onSuccess, onCancel }: PropsType) {
             />
           </div>
           <div>
-            <label htmlFor="phoneNumber" className="block mb-2">
+            <label htmlFor="phone" className="block mb-2">
               Phone Number
             </label>
             <input
               type="tel"
-              name="phoneNumber"
-              id="phoneNumber"
+              name="phone"
+              id="phone"
               required
               defaultValue={initialData?.phone}
             />
@@ -224,7 +252,6 @@ function EmployeeForm({ initialData, onSuccess, onCancel }: PropsType) {
                 type="password"
                 name="change-password"
                 id="change-password"
-                required
                 placeholder="Leave blank to keep current"
               />
             </div>

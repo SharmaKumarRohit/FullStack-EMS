@@ -27,7 +27,7 @@ const router = createBrowserRouter(
         path="/login/admin"
         element={
           <LoginForm
-            role="admin"
+            role="ADMIN"
             title="Admin Portal"
             subTitle="Sign in to manage the organization"
           />
@@ -37,7 +37,7 @@ const router = createBrowserRouter(
         path="/login/employee"
         element={
           <LoginForm
-            role="employee"
+            role="EMPLOYEE"
             title="Employee Portal"
             subTitle="Sign in to access your account"
           />

@@ -25,7 +25,7 @@ export const createLeave = async (req, res) => {
         .status(400)
         .json({ error: "Leave dates must be in the futrue" });
     }
-    if (new Date(startDate) < new Date(endDate)) {
+    if (new Date(endDate) < new Date(startDate)) {
       return res
         .status(400)
         .json({ error: "End dates cannot be before start date" });

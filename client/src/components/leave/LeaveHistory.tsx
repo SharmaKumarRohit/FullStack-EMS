@@ -2,6 +2,9 @@ import { useState } from "react";
 import type { Leave, LeaveStatus } from "../../assets/assets";
 import { format } from "date-fns";
 import { Check, Loader2, X } from "lucide-react";
+import api from "../../api/axios";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 type PropsType = {
   leaves: Leave[];
@@ -14,6 +17,22 @@ function LeaveHistory({ leaves, isAdmin, onUpdate }: PropsType) {
 
   const handleStatusUpdate = async (id: string, status: LeaveStatus) => {
     setProcessing(id);
+    try {
+      await api.patch(`/leave/${id}`, { status });
+      onUpdate();
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const message =
+          error.response?.data?.error ||
+          error.message ||
+          "Failed to update leave status";
+        toast.error(message);
+      } else {
+        toast.error("Something Went Wrong");
+      }
+    } finally {
+      setProcessing(null);
+    }
   };
   return (
     <div className="card overflow-hidden">

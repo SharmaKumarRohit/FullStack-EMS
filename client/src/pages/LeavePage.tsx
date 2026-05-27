@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { dummyLeaveData, type Leave } from "../assets/assets";
+import { type Leave } from "../assets/assets";
 import Loading from "../components/Loading";
 import {
   PalmtreeIcon,
@@ -9,19 +9,37 @@ import {
 } from "lucide-react";
 import LeaveHistory from "../components/leave/LeaveHistory";
 import LeaveModal from "../components/leave/LeaveModal";
+import { useAuth } from "../context/AuthProvider";
+import api from "../api/axios";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 function LeavePage() {
+  const { user } = useAuth();
   const [leaves, setLeaves] = useState<Leave[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
-  const isAdmin = false;
+  const isAdmin = user?.role === "ADMIN";
 
-  const fetchLeaves = useCallback(() => {
-    setLeaves(dummyLeaveData);
-    setTimeout(() => {
+  const fetchLeaves = useCallback(async () => {
+    try {
+      const res = await api.get("/leave");
+      setLeaves(res.data.data || []);
+      if (res.data.employee?.isDeleted) setIsDeleted(true);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const message =
+          error.response?.data?.error ||
+          error.message ||
+          "Failed to fetch leave data";
+        toast.error(message);
+      } else {
+        toast.error("Something Went Wrong");
+      }
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   }, []);
 
   useEffect(() => {

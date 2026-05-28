@@ -80,7 +80,9 @@ function LoginForm({ role, title, subTitle }: LoginFormType) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                placeholder="rohit@example.com"
+                placeholder={
+                  role === "ADMIN" ? "admin@example.com" : "rohit@example.com"
+                }
               />
             </div>
             <div>

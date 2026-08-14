@@ -14,8 +14,8 @@ interface LoginFormType {
 }
 
 function LoginForm({ role, title, subTitle }: LoginFormType) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("antiv653@gmail.com");
+  const [password, setPassword] = useState("Antiv@653");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
